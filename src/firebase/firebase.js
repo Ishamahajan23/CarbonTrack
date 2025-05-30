@@ -25,8 +25,12 @@ export const saveBookmark = (date, avg, index)=>{
     return set(ref (db, `bookmarks/${date}`), {avg,index})
 }
 export const deleteBookmark = (date)=>{
-    return remove(ref(db,`'bookmarks/${date}` ));
+    return remove(ref(db, `bookmarks/${date}`));
 }
+
+export const saveBookmarkWithIndex = (date, avg, index) => {
+    return set(ref(db, `bookmarks/${date}`), { avg, index });
+};
 
 export const getBookmarks = async ()=>{
     const snapshot= await get(ref(db, 'bookmarks/'));

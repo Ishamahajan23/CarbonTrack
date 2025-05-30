@@ -11,7 +11,10 @@ export const fetchIntensityData = createAsyncThunk(
 const intensitySlice = createSlice({
     name: "intensity",
     initialState:{
-        date:null, status: "idle", error: null
+        data: null,
+        metrics: null,
+        status: "idle",
+        error: null,
     },
     reducers:{},
     extraReducers: (builder)=>{
@@ -20,9 +23,14 @@ const intensitySlice = createSlice({
             state.status ="loading";
          })
          .addCase(fetchIntensityData.fulfilled,(state, action)=>{
-            state.status = "succeded";
-            state.date = action.payload;
-
+            state.status = "succeeded";
+            state.data = action.payload;
+            const intensities = action.payload.data.map(d => d.intensity.average);
+            state.metrics = {
+                avg: Math.round(intensities.reduce((a, b) => a + b, 0) / intensities.length),
+                peak: Math.max(...intensities),
+                low: Math.min(...intensities),
+            };
          })
          .addCase(fetchIntensityData.rejected,(state, action)=>{
             state.status ="failed";

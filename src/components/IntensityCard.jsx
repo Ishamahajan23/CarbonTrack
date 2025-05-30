@@ -1,6 +1,6 @@
 import React from 'react'
 import {useMemo} from 'react'
-
+import { saveBookmarkWithIndex } from "../firebase/firebase";
 
 export  default function IntensityCard({data}){
      let avg = useMemo(()=>{
@@ -22,13 +22,19 @@ export  default function IntensityCard({data}){
         return {peak, low};
      },[data]);
      const index = avg >200 ? "High" : avg > 100 ? "Moderate" : "Good";
+     const colorClass = index === "High" ? "bg-red-600" : index === "Moderate" ? "bg-orange-400" : "bg-green-200";
+
+     const handleBookmark = () => {
+        saveBookmarkWithIndex(data.date, avg, index);
+    };
 
   return (
     <>
-     <div className='colorClass'>
+     <div className={`p-4 ${colorClass}`}>
           <h2>Average Intensity : {avg} gCO2/kWh ({index})</h2>
           <p>Peak: {peak.from} - {peak.intensity.average}</p>
           <p>Low: {low.from} -{low.intensity.average}</p>
+          <button onClick={handleBookmark} className="mt-4 py-2 px-4 bg-black text-white">Bookmark</button>
      </div>
     </>
   )
